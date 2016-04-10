@@ -20,10 +20,10 @@ def get_uuid(fpath):
         uuid = get_mac()
         with open(fpath, 'w') as f:
             f.write(str(uuid))
-    return uuid
+    return str(uuid)
 
 def get_ipaddress(interface):
-    return ni.ifaddresses(interface)[ni.AF_INET][0].get('addr')
+    return str(ni.ifaddresses(interface)[ni.AF_INET][0].get('addr'))
 
 
 if __name__ == "__main__":
@@ -101,8 +101,8 @@ if __name__ == "__main__":
     payload = {
             "uuid": get_uuid(uuid_file),
             "ip": get_ipaddress(wifi_interface),
-            "key": api_key,
-            "port": port
+            "key": str(api_key),
+            "port": str(port)
     }
     j_pl = json.dumps(str(payload))
     url = base_url + printer_activate + "?payload=\"" + json.loads(j_pl) + "\""
