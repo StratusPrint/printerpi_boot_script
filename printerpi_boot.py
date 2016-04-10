@@ -119,7 +119,7 @@ def persist_connection(log):
             log.log("ERROR: Timeout of 10 seconds.")
         if ip != get_ipaddress(log):
             if len(ip):
-                ip = get_ipaddress()
+                ip = get_ipaddress(log)
                 activate(log)
         sleep(30)
 
