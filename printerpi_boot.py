@@ -34,7 +34,7 @@ if __name__ == "__main__":
     interface_dir    = "/etc/network"
     interface_file   = "/etc/network/interfaces"
     printer_activate = "/printers/activate"
-    base_url         = "192.168.0.1:5000"
+    base_url         = "http://192.168.0.1:5000"
     uuid_file        = ".uuid"
     api_key          = ""
     port             = 80
