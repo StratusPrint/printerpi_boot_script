@@ -18,24 +18,26 @@ def get_uuid(fpath):
             uuid = f.read()
     else:
         uuid = get_mac()
+        with open(fpath, 'w') as f:
+            f.write(uuid)
     return uuid
 
 def get_ipaddress(interface):
     return ni.ifaddresses(interface)[ni.AF_INET][0].get('addr')
 
 
-
 if __name__ == "__main__":
-    wifi_ssid      = "StratusPrint"
-    wifi_pass      = ""
-    wifi_interface = "wlan0"
-    wifi_profile   = "stratus"
-    interface_dir  = "/etc/network"
-    interface_file = "/etc/network/interfaces"
+    wifi_ssid        = "StratusPrint"
+    wifi_pass        = ""
+    wifi_interface   = "wlan0"
+    wifi_profile     = "stratus"
+    interface_dir    = "/etc/network"
+    interface_file   = "/etc/network/interfaces"
     printer_activate = "/printers/activate"
     base_url         = "192.168.0.1"
-    api_key = ""
-    port = 80
+    uuid_file        = "~/.uuid"
+    api_key          = ""
+    port             = 80
 
     if getuser() != 'root':
         print("Must be run as root...")
@@ -96,7 +98,7 @@ if __name__ == "__main__":
         print("Could not connect to " + wifi_ssid + ". Exiting...")
         exit(3)
     payload = {
-            "uuid": get_uuid(),
+            "uuid": get_uuid(uuid_file),
             "ip": get_ipaddress(wifi_interface),
             "key": api_key,
             "port": port
@@ -105,7 +107,3 @@ if __name__ == "__main__":
 
     for i in range(1000):
         r = requests.get(base_url + printer_activate + "?payload=" + j_pl)
-
-
-
-
