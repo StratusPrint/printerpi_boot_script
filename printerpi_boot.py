@@ -5,6 +5,7 @@ import os
 import sys
 import getopt
 import requests
+import subprocess
 import socket
 import json
 import netifaces as ni
@@ -40,8 +41,14 @@ def get_uuid():
             f.write(str(uuid))
     return str(uuid)
 
-def get_ipaddress():
-    return str(ni.ifaddresses(WIFI_INTERFACE)[ni.AF_INET][0].get('addr'))
+def get_ipaddress(log):
+    try:
+        ip = ni.ifaddresses(WIFI_INTERFACE)[ni.AF_INET][0].get('addr')
+    # if this throws an error, your ip broke. Idk what the error is
+    except:
+        log.log("ERROR: Could not retrieve IP address")
+        ip = ""
+    return str(ip)
 
 def connect_to_ap(log):
     """Function that will connect to wifi with the given parameters"""
@@ -90,7 +97,8 @@ def persist_connection(log):
 
     ip = get_ipaddress
     while(True):
-        r = os.subprocess.call(["ping","-c","1",BASE_IP],stdout="/dev/null")
+        with open("/dev/null") as f:
+            r = subprocess.call(["ping","-c","1",BASE_IP],stdout=f)
         if r != 0:
             log.log("Cannot ping " + BASE_IP + ". Will try to reconnect")
             # Continue trying to connect to the AP
@@ -109,6 +117,10 @@ def persist_connection(log):
                 sleep(10)
         except requests.ReadTimeout:
             log.log("ERROR: Timeout of 10 seconds.")
+        if ip != get_ipaddress(log):
+            if len(ip):
+                ip = get_ipaddress()
+                activate(log)
         sleep(30)
 
 def activate(log):
