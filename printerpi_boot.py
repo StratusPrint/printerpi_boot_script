@@ -134,7 +134,7 @@ def activate(log):
     log.log("Activating printer on " + str(url) + ".")
     for i in range(20):
         try:
-            r = requests.get(url, timeout=1)
+            r = requests.get(url, timeout=10)
             if r.status_code == requests.codes.ok:
                 log.log("Response was okay! Good to go.")
                 return True
@@ -145,10 +145,12 @@ def activate(log):
                 return False
 
         except requests.ConnectionError:
+        except requests.ReadTimeout:
             if i % 5 == 0 or i > 20 - 5:
-                log.log("Error: Can't reach server, will try "
+                log.log("ERROR: Can't reach server, will try "
                         + str(20 - i) + " more times.")
             sleep(1)
+            
     log.log("ERROR: No connection after 20 attempts."
           + "Will attempt to reconnect to AP.")
     return False
