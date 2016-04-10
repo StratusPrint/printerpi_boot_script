@@ -35,6 +35,7 @@ if __name__ == "__main__":
     interface_file   = "/etc/network/interfaces"
     printer_activate = "/printers/activate"
     base_url         = "http://192.168.0.1:5000"
+    #base_url = "http://stratuspi:5000"
     uuid_file        = ".uuid"
     api_key          = ""
     port             = 80
@@ -98,17 +99,21 @@ if __name__ == "__main__":
         print("Could not connect to " + wifi_ssid + ". Exiting...")
         exit(3)
     print("Connected!")
+
     payload = {
             "uuid": get_uuid(uuid_file),
             "ip": get_ipaddress(wifi_interface),
-            "key": str(api_key),
+            "key": "12345",
             "port": str(port)
     }
-    j_pl = json.dumps(str(payload))
-    url = base_url + printer_activate + "?payload=\"" + json.loads(j_pl) + "\""
+    url = base_url + printer_activate + "?payload=" + json.dumps(payload)
     print("Activating printer, 10 second timeout...")
     r = requests.get(url, timeout=10)
     if r.status_code == requests.codes.ok:
         print("Response was okay! Good to go. Exiting...")
         exit(0)
+    else:
+        #TODO make this more descriptive
+        print("Response was " + r.status_code ". Something went wrong")
+        exit(4)
 
