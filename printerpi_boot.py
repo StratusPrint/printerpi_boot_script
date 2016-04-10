@@ -37,7 +37,7 @@ if __name__ == "__main__":
     base_url         = "http://192.168.0.1:5000"
     #base_url = "http://stratuspi:5000"
     uuid_file        = ".uuid"
-    api_key          = ""
+    api_key          = "THISISNOTAGOODKEY"
     port             = 80
 
     if getuser() != 'root':
@@ -103,17 +103,25 @@ if __name__ == "__main__":
     payload = {
             "uuid": get_uuid(uuid_file),
             "ip": get_ipaddress(wifi_interface),
-            "key": "12345",
+            "key": str(api_key),
             "port": str(port)
     }
     url = base_url + printer_activate + "?payload=" + json.dumps(payload)
-    print("Activating printer, 10 second timeout...")
-    r = requests.get(url, timeout=10)
-    if r.status_code == requests.codes.ok:
-        print("Response was okay! Good to go. Exiting...")
-        exit(0)
-    else:
-        #TODO make this more descriptive
-        print("Response was " + r.status_code + ". Something went wrong")
-        exit(4)
+    print("Activating printer, watch output of details")
+    for i in range(100):
+        try:
+            r = requests.get(url, timeout=1)
+            if r.status_code == requests.codes.ok:
+                print("Response was okay! Good to go. Exiting...")
+                exit(0)
+            else:
+                #TODO make this more descriptive
+                print("Response was " + r.status_code
+                        + ". Something went wrong")
+                exit(4)
+        except:
+            print("Error occured, will try " + str(100 - 1) + " more times.")
+            sleep(1)
+    print("No connection after 100 attempts. Call the ghostbusters")
+    exit(5)
 
