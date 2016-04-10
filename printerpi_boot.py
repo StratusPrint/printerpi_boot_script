@@ -97,6 +97,7 @@ if __name__ == "__main__":
     if scheme.activate() == False:
         print("Could not connect to " + wifi_ssid + ". Exiting...")
         exit(3)
+    print("Connected!")
     payload = {
             "uuid": get_uuid(uuid_file),
             "ip": get_ipaddress(wifi_interface),
@@ -104,6 +105,10 @@ if __name__ == "__main__":
             "port": port
     }
     j_pl = json.dumps(str(payload))
+    url = base_url + printer_activate + "?payload=" + j_pl
+    print("Activating printer, 10 second timeout...")
+    r = requests.get(url, timeout=10)
+    if r.status_code == requests.codes.ok:
+        print("Response was okay! Good to go. Exiting...")
+        exit(0)
 
-    for i in range(1000):
-        r = requests.get(base_url + printer_activate + "?payload=" + j_pl)
