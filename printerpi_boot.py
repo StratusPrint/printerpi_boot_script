@@ -29,9 +29,13 @@ BASE_URL         = "http://" + BASE_IP + ":" + BASE_PORT
 #BASE_URL = "http://stratuspi:5000"
 UUID_FILE        = ".uuid"
 API_KEY          = "THISISNOTAGOODKEY"
+UUID             = None
 PORT             = 80
 
 def get_uuid():
+    global UUID
+    if UUID:
+        return str(UUID)
     if os.path.isfile(UUID_FILE):
         with open(UUID_FILE, 'r') as f:
             uuid = long(f.read())
@@ -39,6 +43,7 @@ def get_uuid():
         uuid = get_mac()
         with open(UUID_FILE, 'w') as f:
             f.write(str(uuid))
+    UUID = uuid
     return str(uuid)
 
 def get_ipaddress(log):
@@ -107,16 +112,8 @@ def persist_connection(log):
                 res = connect_to_ap(log)
             res = activate(log)
 
-        try:
-            r = requests.get(BASE_URL + "/ok",timeout=10)
-        except requests.ConnectionError:
-            log.log("ERROR: Server not responding. Will attempt to activate.")
-            res = activate(log)
-            if not res:
-                log.log("ERROR: Still no connection... Sleeping for 10 seconds")
-                sleep(10)
-        except requests.ReadTimeout:
-            log.log("ERROR: Timeout of 10 seconds.")
+        # Every 30 seconds send an activation in case connection was lost
+        activate(log)
         if ip != get_ipaddress(log):
             if len(ip):
                 ip = get_ipaddress(log)
