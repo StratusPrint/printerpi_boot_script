@@ -90,7 +90,7 @@ def persist_connection(log):
 
     ip = get_ipaddress
     while(True):
-        r = os.system("ping -c 1 " + BASE_IP)
+        r = os.subprocess.call(["ping","-c","1",BASE_IP],stdout="/dev/null")
         if r != 0:
             log.log("Cannot ping " + BASE_IP + ". Will try to reconnect")
             # Continue trying to connect to the AP
@@ -100,14 +100,16 @@ def persist_connection(log):
             res = activate(log)
 
         try:
-            r = requests.get(BASE_URL + "/ok", timeout=3)
+            r = requests.get(BASE_URL + "/ok",timeout=10)
         except requests.ConnectionError:
             log.log("ERROR: Server not responding. Will attempt to activate.")
             res = activate(log)
             if not res:
                 log.log("ERROR: Still no connection... Sleeping for 10 seconds")
                 sleep(10)
-        sleep(10)
+        except requests.ReadTimeout:
+            log.log("ERROR: Timeout of 10 seconds.")
+        sleep(30)
 
 def activate(log):
     """Will attempt to activate on the HUB"""
