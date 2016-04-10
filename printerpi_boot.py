@@ -15,11 +15,11 @@ from uuid import getnode as get_mac
 def get_uuid(fpath):
     if os.path.isfile(fpath):
         with open(fpath, 'r') as f:
-            uuid = f.read()
+            uuid = long(f.read())
     else:
         uuid = get_mac()
         with open(fpath, 'w') as f:
-            f.write(uuid)
+            f.write(str(uuid))
     return uuid
 
 def get_ipaddress(interface):
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     interface_file   = "/etc/network/interfaces"
     printer_activate = "/printers/activate"
     base_url         = "192.168.0.1"
-    uuid_file        = "~/.uuid"
+    uuid_file        = ".uuid"
     api_key          = ""
     port             = 80
 
