@@ -145,10 +145,13 @@ def activate(log):
                 return False
 
         except requests.ConnectionError:
-        except requests.ReadTimeout:
             if i % 5 == 0 or i > 20 - 5:
                 log.log("ERROR: Can't reach server, will try "
                         + str(20 - i) + " more times.")
+            sleep(1)
+        except requests.ReadTimeout:
+            log.log("ERROR: Took over 10 seconds for server to respond."
+                  + " Trying again.")
             sleep(1)
             
     log.log("ERROR: No connection after 20 attempts."
