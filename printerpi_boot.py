@@ -95,7 +95,7 @@ def persist_connection(log):
     """Should spawn as it's own thread and ensure it's IP doesn't change or
     that connection is dropped. If it is, continuously try to reconnect"""
 
-    ip = get_ipaddress
+    ip = get_ipaddress(log)
     while(True):
         with open("/dev/null") as f:
             r = subprocess.call(["ping","-c","1",BASE_IP],stdout=f)
