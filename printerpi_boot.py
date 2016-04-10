@@ -136,7 +136,7 @@ def activate(log):
         try:
             r = requests.get(url, timeout=10)
             if r.status_code == requests.codes.ok:
-                log.log("Response was okay! Good to go.")
+                log.log("Successfully activated on the HUB")
                 return True
             else:
                 #TODO make this more descriptive
