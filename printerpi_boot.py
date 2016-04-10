@@ -129,6 +129,7 @@ def activate(log):
             "key": str(API_KEY),
             "port": str(PORT)
     }
+
     url = BASE_URL + PRINTER_ACTIVATE + "?payload=" + json.dumps(payload)
     log.log("Activating printer on " + str(url) + ".")
     for i in range(20):
@@ -142,8 +143,9 @@ def activate(log):
                 log.log("ERROR: Response was " + r.status_code
                       + ". Something went wrong. ")
                 return False
+
         except requests.ConnectionError:
-            if i % 5 == 0 or i < 5:
+            if i % 5 == 0 or i < 20 - i:
                 log.log("Error: Can't reach server, will try "
                         + str(20 - i) + " more times.")
             sleep(1)
