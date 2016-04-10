@@ -152,13 +152,15 @@ if __name__ == "__main__":
         # Short option syntax: "hv:"
         # Long option syntax: "help" or "verbose="
         opts, args = getopt.getopt(sys.argv[1:],
-                                   "hs:p:i:a:",
+                                   "hvs:p:i:a:",
                                    ["help","ssid=","pass="
-                                       ,"interface=","apikey="])
+                                       ,"interface=","apikey="
+                                       ,"verbose"])
     
-    except(getopt.GetoptError, err):
+    except(getopt.GetoptError):
         # Print debug info
-        print str(err)
+        print("Usage: run.py -h -s <ssid> -p <password>")
+        exit(1)
     
     for opt, arg in opts:
         if opt in ["-h", "--help"]:
