@@ -128,7 +128,7 @@ def activate(log):
 
     payload = {
             "uuid": get_uuid(),
-            "ip": get_ipaddress(),
+            "ip": get_ipaddress(log),
             "key": str(API_KEY),
             "port": str(PORT)
     }
