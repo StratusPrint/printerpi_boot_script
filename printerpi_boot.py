@@ -145,7 +145,7 @@ def activate(log):
                 return False
 
         except requests.ConnectionError:
-            if i % 5 == 0 or i < 5:
+            if i % 5 == 0 or i > 20 - 5:
                 log.log("Error: Can't reach server, will try "
                         + str(20 - i) + " more times.")
             sleep(1)
