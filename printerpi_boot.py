@@ -11,6 +11,7 @@ import netifaces as ni
 from getpass import getuser
 from wifi import Cell, Scheme
 from uuid import getnode as get_mac
+from time import sleep
 
 def get_uuid(fpath):
     if os.path.isfile(fpath):
