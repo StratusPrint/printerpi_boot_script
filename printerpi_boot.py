@@ -122,7 +122,7 @@ if __name__ == "__main__":
                 print("Response was " + r.status_code
                         + ". Something went wrong")
                 exit(4)
-        except ConnectionError:
+        except requests.ConnectionError:
             print("Error occured, will try " + str(100 - i) + " more times.")
             sleep(1)
     print("No connection after 100 attempts. Call the ghostbusters")
