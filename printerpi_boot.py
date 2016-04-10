@@ -94,6 +94,8 @@ if __name__ == "__main__":
                                          cell,
                                          passkey=wifi_pass)
                 scheme.save()
+            else:
+                print("SSID " + wifi_ssid + " was not found. Exiting...")
 
     if scheme.activate() == False:
         print("Could not connect to " + wifi_ssid + ". Exiting...")
