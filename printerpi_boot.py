@@ -102,6 +102,14 @@ def persist_connection(log):
 
     ip = get_ipaddress(log)
     while(True):
+        # Every 30 seconds send an activation in case connection was lost
+        if ip != get_ipaddress(log):
+            if len(ip):
+                ip = get_ipaddress(log)
+                activate(log)
+            else:
+                log.log("ERROR: Did not receive a valid IP address.")
+
         with open("/dev/null") as f:
             r = subprocess.call(["ping","-c","1",BASE_IP],stdout=f)
         if r != 0:
@@ -110,14 +118,7 @@ def persist_connection(log):
             res = connect_to_ap(log)
             while not res:
                 res = connect_to_ap(log)
-            res = activate(log)
-
-        # Every 30 seconds send an activation in case connection was lost
-        activate(log)
-        if ip != get_ipaddress(log):
-            if len(ip):
-                ip = get_ipaddress(log)
-                activate(log)
+        res = activate(log)
         sleep(30)
 
 def activate(log):
