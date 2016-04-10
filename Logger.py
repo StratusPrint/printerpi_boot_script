@@ -32,7 +32,7 @@ class Log(object):
         when writing to the log
         """
 
-        message = str(datetime.datetime.now()) + ": " + message
+        message = str(datetime.datetime.now()) + ": " + str(message)
         if self._print:
             print(message)
         with self._flock:
