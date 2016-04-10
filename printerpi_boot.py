@@ -103,7 +103,7 @@ if __name__ == "__main__":
             "key": api_key,
             "port": port
     }
-    j_pl = json.loads(str(payload))
+    j_pl = json.dumps(str(payload))
 
     for i in range(1000):
         r = requests.get(base_url + printer_activate + "?payload=" + j_pl)
