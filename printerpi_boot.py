@@ -105,7 +105,7 @@ if __name__ == "__main__":
             "port": port
     }
     j_pl = json.dumps(str(payload))
-    url = base_url + printer_activate + "?payload=" + j_pl
+    url = base_url + printer_activate + "?payload=" + json.loads(j_pl)
     print("Activating printer, 10 second timeout...")
     r = requests.get(url, timeout=10)
     if r.status_code == requests.codes.ok:
