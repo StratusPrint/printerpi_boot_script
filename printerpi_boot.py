@@ -114,6 +114,6 @@ if __name__ == "__main__":
         exit(0)
     else:
         #TODO make this more descriptive
-        print("Response was " + r.status_code ". Something went wrong")
+        print("Response was " + r.status_code + ". Something went wrong")
         exit(4)
 
