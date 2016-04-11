@@ -111,9 +111,10 @@ def persist_connection(log):
     ip = get_ipaddress(log)
     while(True):
         # Every 30 seconds send an activation in case connection was lost
-        if ip != get_ipaddress(log):
-            if len(ip):
-                ip = get_ipaddress(log)
+        temp_ip = get_ipaddress(log)
+        if ip != temp_ip:
+            if len(temp_ip):
+                ip = temp_ip
                 activate(log)
             else:
                 log.log("ERROR: Did not receive a valid IP address.")
