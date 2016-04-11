@@ -76,7 +76,7 @@ def connect_to_ap(log):
 
     # If the scheme was not found or if it was found and didn't activate,
     # look for the ssid, save it, and connect to it.
-    if scheme == None or scheme.activate() == False:
+    if scheme == None:
         cells = Cell.all(WIFI_INTERFACE)
         for cell in cells:
             if cell.ssid == WIFI_SSID:
@@ -91,6 +91,12 @@ def connect_to_ap(log):
 
         if scheme.activate() == False:
             log.log("ERROR: Could not connect to " + WIFI_SSID + ".")
+            return False
+    else:
+        try:
+            res = scheme.activate()
+        except requests.ConnectionError:
+            log.log("ERROR: Could connect to " + WIFI_SSID)
             return False
 
     log.log("Successfully connected to " + WIFI_SSID + ".")
