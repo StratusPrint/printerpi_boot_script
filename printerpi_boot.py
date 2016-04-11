@@ -136,7 +136,7 @@ def verify(log):
     url = BASE_URL + PRINTER_LIST
     try:
         r = requests.get(url, timeout=10)
-        if r.status_code != requets.codes.ok:
+        if r.status_code != requests.codes.ok:
             log.log("ERROR: Status code of " + url + " was " + r.status_code) 
             return False
     except requests.ConnectionError:
