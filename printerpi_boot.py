@@ -24,6 +24,7 @@ WIFI_PROFILE     = "stratus"
 INTERFACE_DIR    = "/etc/network"
 INTERFACE_FILE   = "/etc/network/interfaces"
 PRINTER_ACTIVATE = "/printers/activate"
+PRINTER_LIST     = "/printers/list"
 BASE_IP          = "192.168.0.1"
 BASE_PORT        = "5000"
 BASE_URL         = "http://" + BASE_IP + ":" + BASE_PORT
@@ -127,8 +128,36 @@ def persist_connection(log):
             res = connect_to_ap(log)
             while not res:
                 res = connect_to_ap(log)
-        res = activate(log)
+        res = verify(log)
         sleep(30)
+
+def verify(log):
+    """Will make sure the data the server has is still valid"""
+    url = BASE_URL + PRINTER_LIST
+    try:
+        r = requests.get(url, timeout=10)
+        if r.status_code != requets.codes.ok:
+            log.log("ERROR: Status code of " + url + " was " + r.status_code) 
+            return False
+    except requests.ConnectionError:
+        log.log("ERROR: Could not make a connection with the server")
+        return False
+    except requests.Timeout:
+        log.log("ERROR: Took over 10 seconds for server to respond.")
+        return False
+
+    printers = json.loads(r.text)
+    uuid = get_uuid(log)
+    ip   = get_ipaddress(log)
+
+    if not uuid in printers:
+        log.log("ERROR: Server doesn't know about me!")
+        return activate(log)
+    if printers.get(uuid).get('ip') != ip:
+        log.log("ERROR: Server has wrong IP.")
+        return activate(log)
+    return True
+
 
 def activate(log):
     """Will attempt to activate on the HUB"""
