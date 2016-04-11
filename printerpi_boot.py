@@ -147,16 +147,20 @@ def verify(log):
         return False
 
     printers = json.loads(r.text)
-    uuid = get_uuid(log)
+    uuid = get_uuid()
     ip   = get_ipaddress(log)
 
     if not uuid in printers:
         log.log("ERROR: Server doesn't know about me!")
         return activate(log)
-    if printers.get(uuid).get('ip') != ip:
-        log.log("ERROR: Server has wrong IP.")
-        return activate(log)
-    return True
+    if len(ip):
+        if printers.get(uuid).get('ip') != ip:
+            log.log("ERROR: Server has wrong IP.")
+            return activate(log)
+    else:
+        log.log("ERROR: Did not receive a valid IP address.")
+        return False
+    return False
 
 
 def activate(log):
