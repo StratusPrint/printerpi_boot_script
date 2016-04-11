@@ -39,11 +39,13 @@ class Log(object):
 
             with open(self._fname, 'r') as f:
                 lines = f.readlines()
-                if len(lines) > 2000:
-                    lines = lines[1000:]
+            if len(lines) > 2000:
                 lines.append(message + "\n")
-            with open(self._fname, 'w+') as f:
-                f.writelines(lines)
+                with open(self._fname, 'w+') as f:
+                    f.writelines(lines[1000:])
+            else:
+                with open(self._fname, 'a') as f:
+                    f.write(message + '\n')
 
 if __name__ == "__main__":
     log = Log()
