@@ -36,10 +36,16 @@ class Log(object):
         if self._print:
             print(message)
         with self._flock:
-            with open(self._fname, 'a') as f:
-                f.write(message + '\n')
+
+            with open(self._fname, 'r') as f:
+                lines = f.readlines()
+                if len(lines) > 2000:
+                    lines = lines[1000:]
+                lines.append(message + "\n")
+            with open(self._fname, 'w+') as f:
+                f.writelines(lines)
 
 if __name__ == "__main__":
     log = Log()
-    log.log("hello")
-    log.log("goodbye")
+    for i in range(100):
+        log.log(i)
