@@ -96,7 +96,8 @@ def connect_to_ap(log):
     else:
         try:
             res = scheme.activate()
-        except ConnectionError:
+        # This can throw a lot of errors, let's just catch them all for now
+        except:
             log.log("ERROR: Could connect to " + WIFI_SSID)
             return False
 
