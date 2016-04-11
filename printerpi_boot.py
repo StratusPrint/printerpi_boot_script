@@ -13,6 +13,7 @@ import thread
 from Logger import Log
 from getpass import getuser
 from wifi import Cell, Scheme
+from wifi.exceptions import ConnectionError, InterfaceError
 from uuid import getnode as get_mac
 from time import sleep
 
@@ -95,7 +96,7 @@ def connect_to_ap(log):
     else:
         try:
             res = scheme.activate()
-        except requests.ConnectionError:
+        except ConnectionError:
             log.log("ERROR: Could connect to " + WIFI_SSID)
             return False
 
