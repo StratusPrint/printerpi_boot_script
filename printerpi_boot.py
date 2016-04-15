@@ -137,7 +137,7 @@ def verify(log):
     try:
         r = requests.get(url, timeout=10)
         if r.status_code != requests.codes.ok:
-            log.log("ERROR: Status code of " + url + " was " + r.status_code) 
+            log.log("ERROR: Status code of " + url + " was " + str(r.status_code))
             return False
     except requests.ConnectionError:
         log.log("ERROR: Could not make a connection with the server")
