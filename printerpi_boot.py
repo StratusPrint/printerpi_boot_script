@@ -87,9 +87,10 @@ def connect_to_ap(log):
                                          cell,
                                          passkey=WIFI_PASS)
                 scheme.save()
-            else:
-                log.log("ERROR: SSID " + WIFI_SSID + " was not found.")
-                return False
+                break
+    if scheme == None:
+        log.log("ERROR: SSID " + WIFI_SSID + " was not found.")
+        return False
 
         if scheme.activate() == False:
             log.log("ERROR: Could not connect to " + WIFI_SSID + ".")
