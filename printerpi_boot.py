@@ -149,14 +149,14 @@ def verify(log):
         return False
 
     printers = json.loads(r.text)
-    uuid = get_uuid()
+    id = get_uuid()
     ip   = get_ipaddress(log)
 
-    if not uuid in printers:
+    if not id in printers:
         log.log("ERROR: Server doesn't know about me!")
         return activate(log)
     if len(ip):
-        if printers.get(uuid).get('ip') != ip:
+        if printers.get(id).get('ip') != ip:
             log.log("ERROR: Server has wrong IP.")
             return activate(log)
     else:
@@ -168,18 +168,18 @@ def verify(log):
 def activate(log):
     """Will attempt to activate on the HUB"""
 
-    payload = {
-            "uuid": get_uuid(),
+    params = {
+            "id": get_uuid(),
             "ip": get_ipaddress(log),
             "key": str(API_KEY),
             "port": str(PORT)
     }
 
-    url = BASE_URL + PRINTER_ACTIVATE + "?payload=" + json.dumps(payload)
+    url = BASE_URL + PRINTER_ACTIVATE
     log.log("Activating printer on " + str(url) + ".")
     for i in range(20):
         try:
-            r = requests.get(url, timeout=10)
+            r = requests.get(url, params=params, timeout=10)
             if r.status_code == requests.codes.ok:
                 log.log("Successfully activated on the HUB")
                 return True
