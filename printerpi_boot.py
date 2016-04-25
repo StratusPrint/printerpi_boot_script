@@ -137,8 +137,11 @@ def persist_connection(log):
 def verify(log):
     """Will make sure the data the server has is still valid"""
     url = BASE_URL + PRINTER_LIST
+    params = {
+            'online_only': 'true'
+    }
     try:
-        r = requests.get(url, timeout=10)
+        r = requests.get(url, params=params, timeout=10)
         if r.status_code != requests.codes.ok:
             log.log("ERROR: Status code of " + url + " was " + str(r.status_code))
             return False
@@ -149,7 +152,7 @@ def verify(log):
         log.log("ERROR: Took over 10 seconds for server to respond.")
         return False
 
-    printers = json.loads(r.text)
+    printers = r.json()
     id = get_uuid()
     ip   = get_ipaddress(log)
 
