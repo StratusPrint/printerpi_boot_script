@@ -100,6 +100,7 @@ def connect_to_ap(log):
             res = scheme.activate()
         # This can throw a lot of errors, let's just catch them all for now
         except:
+            scheme.delete()
             #TODO delete the old scheme and add a new one. Possibly for password change
             log.log("ERROR: Could connect to " + WIFI_SSID)
             return False
