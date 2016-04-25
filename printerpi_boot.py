@@ -23,8 +23,8 @@ WIFI_INTERFACE   = "wlan0"
 WIFI_PROFILE     = "stratus"
 INTERFACE_DIR    = "/etc/network"
 INTERFACE_FILE   = "/etc/network/interfaces"
-PRINTER_ACTIVATE = "/printers/activate"
-PRINTER_LIST     = "/printers/list"
+PRINTER_ACTIVATE = "/printers"
+PRINTER_LIST     = "/printers"
 BASE_IP          = "192.168.0.1"
 BASE_PORT        = "5000"
 BASE_URL         = "http://" + BASE_IP + ":" + BASE_PORT
@@ -168,7 +168,7 @@ def verify(log):
 def activate(log):
     """Will attempt to activate on the HUB"""
 
-    params = {
+    data = {
             "id": get_uuid(),
             "ip": get_ipaddress(log),
             "key": str(API_KEY),
@@ -179,7 +179,7 @@ def activate(log):
     log.log("Activating printer on " + str(url) + ".")
     for i in range(20):
         try:
-            r = requests.get(url, params=params, timeout=10)
+            r = requests.post(url, data=data, timeout=10)
             if r.status_code == requests.codes.ok:
                 log.log("Successfully activated on the HUB")
                 return True
