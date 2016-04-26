@@ -246,6 +246,7 @@ if __name__ == "__main__":
             API_KEY = arg
 
     log = Log(print_enabled=print_enabled)
+    log.log("Starting printerpi_booot.py")
     if WIFI_PASS == "":
         print("No password was entered, please specify with '-p <password>'")
         exit(2)
