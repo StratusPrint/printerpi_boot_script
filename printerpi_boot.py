@@ -142,9 +142,6 @@ def verify(log):
     }
     try:
         r = requests.get(url, params=params, timeout=10)
-        elif r.status_code != requests.codes.ok:
-            log.log("ERROR: Status code of " + url + " was " + str(r.status_code))
-            return False
     except requests.ConnectionError:
         log.log("ERROR: Could not make a connection with the server")
         return False
@@ -152,10 +149,10 @@ def verify(log):
         log.log("ERROR: Took over 10 seconds for server to respond.")
         return False
 
-    if r:
-        printers = r.json()
-    else:
+    if r.status_code != 200:
+        log.log("ERROR: Status code of " + url + " was " + str(r.status_code))
         return False
+    printers = r.json()
     id = get_uuid()
     ip   = get_ipaddress(log)
 
