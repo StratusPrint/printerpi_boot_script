@@ -153,7 +153,7 @@ def verify(log):
     if r.status_code != 200:
         log.log("ERROR: Status code of " + url + " was " + str(r.status_code))
         return False
-    printers = r.json()
+    printers = r.json().get("printers")
     id = get_uuid()
     ip   = get_ipaddress(log)
 
