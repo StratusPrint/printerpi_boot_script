@@ -138,7 +138,8 @@ def verify(log):
     """Will make sure the data the server has is still valid"""
     url = BASE_URL + PRINTER_LIST
     params = {
-            'online_only': 'true'
+            'online_only': 'true',
+            'internal': 'true'
     }
     try:
         r = requests.get(url, params=params, timeout=10)
@@ -156,18 +157,18 @@ def verify(log):
     id = get_uuid()
     ip   = get_ipaddress(log)
 
-    if not id in printers:
-        log.log("ERROR: Server doesn't know about me!")
-        return activate(log)
-    if len(ip):
-        if printers.get(id).get('ip') != ip:
-            log.log("ERROR: Server has wrong IP.")
-            return activate(log)
-    else:
-        log.log("ERROR: Did not receive a valid IP address.")
-        return False
+    for printer in printers:
+        if printer.get("id") == id:
+            if len(ip):
+                if printers.get(id).get('ip') != ip:
+                    log.log("ERROR: Server has wrong IP.")
+                    return activate(log)
+            else:
+                log.log("ERROR: Did not receive a valid IP address.")
+                return False
+            return True
+    log.log("ERROR: Server doesn't know about me!")
     return False
-
 
 def activate(log):
     """Will attempt to activate on the HUB"""
@@ -191,7 +192,7 @@ def activate(log):
                 return True
             else:
                 #TODO make this more descriptive
-                log.log("ERROR: Response was " + r.status_code
+                log.log("ERROR: Response was " + str(r.status_code)
                       + ". Something went wrong. ")
                 return False
 
