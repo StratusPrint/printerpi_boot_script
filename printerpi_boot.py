@@ -158,9 +158,9 @@ def verify(log):
     ip   = get_ipaddress(log)
 
     for printer in printers:
-        if printer.get("id") == id:
+        if printer.get("id") == int(id):
             if len(ip):
-                if printers.get(id).get('ip') != ip:
+                if printer.get('ip') != ip:
                     log.log("ERROR: Server has wrong IP.")
                     return activate(log)
             else:
@@ -168,7 +168,7 @@ def verify(log):
                 return False
             return True
     log.log("ERROR: Server doesn't know about me!")
-    return False
+    return activate(log)
 
 def activate(log):
     """Will attempt to activate on the HUB"""
