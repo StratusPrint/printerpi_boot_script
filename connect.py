@@ -10,7 +10,7 @@ import socket
 import json
 import netifaces as ni
 import thread
-from Logger import Log
+from logger import Log
 from getpass import getuser
 from wifi import Cell, Scheme
 from wifi.exceptions import ConnectionError, InterfaceError
