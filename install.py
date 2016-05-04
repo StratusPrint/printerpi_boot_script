@@ -77,8 +77,10 @@ if __name__ == "__main__":
         run = raw_input("All set, run now and test? [y/n]:")
         if run.lower() in ["y", "yes"]:
             subprocess.call(['systemctl','start','stratusprint-printer'])
-    else:
-        if initd_setup(config):
-            pass
+    elif initd_setup(config):
+        print("Finished initd setup")
+        run = raw_input("All set, run now and test? [y/n]:")
+        if run.lower() in ["y", "yes"]:
+            subprocess.call(['service','stratusprint-printer','start'])
 
 
