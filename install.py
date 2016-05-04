@@ -63,7 +63,7 @@ if __name__ == "__main__":
         interface = "wlan0"
     if config == "":
         config = "arguments.config"
-    with open("arguments.conf","w+") as f:
+    with open(config,"w+") as f:
         f.writelines(["-a " + str(api_key) + "\n"
                     , "-i " + str(interface) + "\n"
                     , "-s " + str(ssid) + "\n"
