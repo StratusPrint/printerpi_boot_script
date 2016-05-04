@@ -29,12 +29,14 @@ def systemd_setup(config):
 def initd_setup(config):
     new = []
     cwd = os.getcwd()
-    command = "/usr/bin/python2 " + cwd + "/connect.py -c " + config
+    command = "connect.py"
+    opts    = "-c " + config
     script_path = "/etc/init.d/stratusprint-printer"
     with open("init.d.script", "r") as f:
         for line in f:
             line = line.replace("<COMMAND>", command)
             line = line.replace("<DIRECTORY>",cwd)
+            line = line.replace("<OPTS>",opts)
             new.append(line)
     with open(script_path, "w+") as f:
         f.writelines(new)
@@ -52,7 +54,7 @@ if __name__ == "__main__":
     config    = raw_input("Config File[arguments.config]:")
     ssid      = raw_input("Network SSID[REQUIRED]:")
     wpass     = raw_input("Network Password[REQUIRED]:")
-    api_key   = raw_input("Octoprint API-Key[REQUIRED]: ")
+    api_key   = raw_input("Octoprint API-Key[REQUIRED]:")
 
     if api_key == "":
         print("Did not provide an api_key...Exiting")

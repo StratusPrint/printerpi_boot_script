@@ -1,90 +1,63 @@
-#!/bin/bash
-#/etc/init.d/stratusprint-printer
-
 #!/bin/sh
+
 ### BEGIN INIT INFO
 # Provides:          stratusprint-printer
-# Required-Start:    $local_fs $network $named $time $syslog
-# Required-Stop:     $local_fs $network $named $time $syslog
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Description:       connection daemon for a printer connected to a stratusprint-hub
+# Short-Description: Put a short description of the service here
+# Description:       Put a long description of the service here
 ### END INIT INFO
 
-SCRIPT=<COMMAND>
-RUNAS=root
-NAME=stratusprint-printer
-DIRECTORY=<DIRECTORY>
+# Change the next 3 lines to suit where you install your script and what you want to call it
+DIR="<DIRECTORY>"
+DAEMON=$DIR/<COMMAND>
+DAEMON_NAME=stratusprint-printer
 
-PIDFILE=/var/run/$NAME.pid
-LOGFILE=/var/log/$NAME.log
+# Add any command line options for your daemon here
+DAEMON_OPTS="<OPTS>"
 
-start() {
-  if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE); then
-    echo 'Service already running' >&2
-    return 1
-  fi
-  echo 'Starting service…' >&2
-  local CMD="$SCRIPT &> \"$LOGFILE\" & echo \$!"
-  su -c "$CMD" $RUNAS > "$PIDFILE"
-  echo 'Service started' >&2
+# This next line determines what user the script runs as.
+# Root generally not recommended but necessary if you are using the Raspberry Pi GPIO from Python.
+DAEMON_USER=root
+
+# The process ID of the script when it runs is stored here:
+PIDFILE=/var/run/$DAEMON_NAME.pid
+
+. /lib/lsb/init-functions
+
+do_start () {
+    cd $DIR
+    log_daemon_msg "Starting system $DAEMON_NAME daemon"
+    start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON -- $DAEMON_OPTS
+    log_end_msg $?
+}
+do_stop () {
+    log_daemon_msg "Stopping system $DAEMON_NAME daemon"
+    start-stop-daemon --stop --pidfile $PIDFILE --retry 10
+    log_end_msg $?
 }
 
-stop() {
-  if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
-    echo 'Service not running' >&2
-    return 1
-  fi
-  echo 'Stopping service…' >&2
-  kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
-  echo 'Service stopped' >&2
-}
-
-uninstall() {
-  echo -n "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
-  local SURE
-  read SURE
-  if [ "$SURE" = "yes" ]; then
-    stop
-    rm -f "$PIDFILE"
-    echo "Notice: log file was not removed: '$LOGFILE'" >&2
-    update-rc.d -f $NAME remove
-    rm -fv "$0"
-  fi
-}
-
-status() {
-        printf "%-50s" "Checking $NAME..."
-    if [ -f $PIDFILE ]; then
-        PID=$(cat $PIDFILE)
-            if [ -z "$(ps axf | grep ${PID} | grep -v grep)" ]; then
-                printf "%s\n" "The process appears to be dead but pidfile still exists"
-            else    
-                echo "Running, the PID is $PID"
-            fi
-    else
-        printf "%s\n" "Service not running"
-    fi
-}
-
-cd $DIRECTORY
 case "$1" in
-  start)
-    start
-    ;;
-  stop)
-    stop
-    ;;
-  status)
-    status
-    ;;
-  uninstall)
-    uninstall
-    ;;
-  restart)
-    stop
-    start
-    ;;
-  *)
-    echo "Usage: $0 {start|stop|status|restart|uninstall}"
+
+    start|stop)
+        do_${1}
+        ;;
+
+    restart|reload|force-reload)
+        do_stop
+        do_start
+        ;;
+
+    status)
+        status_of_proc "$DAEMON_NAME" "$DAEMON" && exit 0 || exit $?
+        ;;
+
+    *)
+        echo "Usage: /etc/init.d/$DAEMON_NAME {start|stop|restart|status}"
+        exit 1
+        ;;
+
 esac
+exit 0
