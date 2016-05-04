@@ -211,30 +211,23 @@ def activate(log):
     return False
 
 
-if __name__ == "__main__":
-    print_enabled    = False
+def set_args(args):
+    global config
+    global print_enabled
+    global WIFI_SSID
+    global WIFI_INTERFACE
+    global WIFI_PASS
+    global API_KEY
 
-    if getuser() != 'root':
-        print("Must be run as root...")
-        exit(1)
-
-    try:
-        # Short option syntax: "hv:"
-        # Long option syntax: "help" or "verbose="
-        opts, args = getopt.getopt(sys.argv[1:],
-                                   "hvs:p:i:a:",
+    opts, args = getopt.getopt(args, "hvs:p:i:a:c:",
                                    ["help","ssid=","pass="
                                        ,"interface=","apikey="
-                                       ,"verbose"])
-    
-    except(getopt.GetoptError):
-        # Print debug info
-        print("Usage: run.py -h -s <ssid> -p <password>")
-        exit(1)
-    
+                                       ,"verbose","config="])
     for opt, arg in opts:
         if opt in ["-h", "--help"]:
             print("Usage: run.py -h -s <ssid> -p <password>")
+        elif opt in ["-c", "--config"]:
+            config = arg
         elif opt in ["-v", "--verbose"]:
             print_enabled = True
         elif opt in ["-s", "--ssid"]:
@@ -246,15 +239,39 @@ if __name__ == "__main__":
         elif opt in ["-a", "--apikey"]:
             API_KEY = arg
 
-    log = Log(print_enabled=print_enabled)
-    log.log("Starting printerpi_booot.py")
-    if WIFI_PASS == "":
-        print("No password was entered, please specify with '-p <password>'")
-        exit(2)
+
+def load_config(config):
+    path = os.path.abspath(config)
+    l = []
+    with open(path, "r") as f:
+        for line in f:
+            if line[0] == "#":
+                continue
+            l.extend(line.split())
+    set_args(l)
+    return 0
+
+print_enabled    = False
+
+if getuser() != 'root':
+    print("Must be run as root...")
+    exit(1)
+
+config = None
+set_args(sys.argv[1:])
+if config != None:
+    load_config(config)
+
+
+if WIFI_PASS == "":
+    print("No password was entered, please specify with '-p <password>'")
+    exit(2)
+log = Log(print_enabled=print_enabled)
+log.log("Starting connect.py")
+res = connect_to_ap(log)
+while not res:
     res = connect_to_ap(log)
-    while not res:
-        res = connect_to_ap(log)
-    res = activate(log)
-    persist_connection(log)
-    # YOU WILL NEVER GET PASSED THIS
+res = activate(log)
+persist_connection(log)
+# YOU WILL NEVER GET PASSED THIS
 
