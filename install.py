@@ -16,8 +16,8 @@ def systemd_setup(config):
     command = "/usr/bin/python2 " + cwd + "/connect.py -c " + config
     with open("systemd.unit", "r") as f:
         for line in f:
-            line = line.replace("$DIRECTORY$",cwd)
-            line = line.replace("$COMMAND$", command)
+            line = line.replace("<DIRECTORY>",cwd)
+            line = line.replace("<COMMAND>", command)
             new.append(line)
     with open("/usr/lib/systemd/system/stratusprint-printer.service", "w+") as f:
         f.writelines(new)
@@ -33,7 +33,8 @@ def initd_setup(config):
     script_path = "/etc/init.d/stratusprint-printer"
     with open("init.d.script", "r") as f:
         for line in f:
-            line = line.replace("$COMMAND$", command)
+            line = line.replace("<COMMAND>", command)
+            line = line.replace("<DIRECTORY>",cwd)
             new.append(line)
     with open(script_path, "w+") as f:
         f.writelines(new)

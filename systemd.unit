@@ -3,8 +3,10 @@ Description=StratusPrint Printer Connection Manager
 
 [Service]
 Type=simple
-WorkingDirectory=$DIRECTORY$
-ExecStart=$COMMAND$
+User=root
+Group=root
+WorkingDirectory=<DIRECTORY>
+ExecStart=<COMMAND>
 StandardOutput=syslog
 StandardError=syslog
 
