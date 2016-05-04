@@ -27,6 +27,9 @@ def systemd_setup(config):
     return True
 
 def initd_setup(config):
+    new = []
+    cwd = os.getcwd()
+    command = "/usr/bin/python2 " + cwd + "/connect.py -c " + config
     script_path = "/etc/init.d/stratusprint-printer"
     with open("init.d.script", "r") as f:
         for line in f:
