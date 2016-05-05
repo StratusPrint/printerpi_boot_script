@@ -138,7 +138,7 @@ def verify(log):
     """Will make sure the data the server has is still valid"""
     url = BASE_URL + PRINTER_LIST
     params = {
-            'online_only': 'true',
+            'online': 'true',
             'internal': 'true'
     }
     try:
