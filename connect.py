@@ -177,7 +177,7 @@ def activate(log):
             "id": get_uuid(),
             "ip": get_ipaddress(log),
             "key": str(API_KEY),
-            "port": str(PORT)
+            "port": str(PORT),
             "box": str(BLACK_BOX)
     }
 
