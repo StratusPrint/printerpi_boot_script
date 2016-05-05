@@ -31,6 +31,7 @@ BASE_URL         = "http://" + BASE_IP + ":" + BASE_PORT
 #BASE_URL = "http://stratuspi:5000"
 UUID_FILE        = ".uuid"
 API_KEY          = "THISISNOTAGOODKEY"
+BLACK_BOX        = ""
 UUID             = None
 PORT             = 80
 
