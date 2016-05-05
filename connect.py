@@ -220,10 +220,11 @@ def set_args(args):
     global API_KEY
     global BLACK_BOX
 
-    opts, args = getopt.getopt(args, "hvs:p:i:a:c:",
+    opts, args = getopt.getopt(args, "hvs:p:i:a:c:b:",
                                    ["help","ssid=","pass="
                                        ,"interface=","apikey="
-                                       ,"verbose","config="])
+                                       ,"verbose","config="
+                                       ,"blackbox="])
     for opt, arg in opts:
         if opt in ["-h", "--help"]:
             print("Usage: run.py -h -s <ssid> -p <password>")
