@@ -55,6 +55,7 @@ if __name__ == "__main__":
     ssid      = raw_input("Network SSID[REQUIRED]:")
     wpass     = raw_input("Network Password[REQUIRED]:")
     api_key   = raw_input("Octoprint API-Key[REQUIRED]:")
+    box       = raw_input("Black Box UID[REQUIRED]:")
 
     if api_key == "":
         print("Did not provide an api_key...Exiting")
@@ -65,15 +66,19 @@ if __name__ == "__main__":
     if wpass == "":
         print("Did not provide a Password...Exiting")
         exit(1)
+    if box == "":
+        print("Did not provide a UID for the black box...Exiting")
+        exit(1)
     if interface == "":
         interface = "wlan0"
     if config == "":
         config = "arguments.config"
     with open(config,"w+") as f:
-        f.writelines(["-a " + str(api_key) + "\n"
+        f.writelines(["-a " + str(api_key)   + "\n"
                     , "-i " + str(interface) + "\n"
-                    , "-s " + str(ssid) + "\n"
-                    , "-p " + str(wpass) + "\n"])
+                    , "-s " + str(ssid)      + "\n"
+                    , "-p " + str(wpass)     + "\n"
+                    , "-b " + str(box)       + "\n"])
 
     if systemd_setup(config):
         print("Finished systemd setup")

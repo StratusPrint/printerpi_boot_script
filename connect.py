@@ -178,6 +178,7 @@ def activate(log):
             "ip": get_ipaddress(log),
             "key": str(API_KEY),
             "port": str(PORT)
+            "box": str(BLACK_BOX)
     }
 
     url = BASE_URL + PRINTER_ACTIVATE
@@ -218,6 +219,7 @@ def set_args(args):
     global WIFI_INTERFACE
     global WIFI_PASS
     global API_KEY
+    global BLACK_BOX
 
     opts, args = getopt.getopt(args, "hvs:p:i:a:c:",
                                    ["help","ssid=","pass="
@@ -238,6 +240,9 @@ def set_args(args):
             WIFI_INTERFACE = arg
         elif opt in ["-a", "--apikey"]:
             API_KEY = arg
+        elif opt in ["-b", "--blackbox"]:
+            BLACK_BOX = arg
+
 
 
 def load_config(config):
@@ -265,6 +270,9 @@ if config != None:
 
 if WIFI_PASS == "":
     print("No password was entered, please specify with '-p <password>'")
+    exit(2)
+if BLACK_BOX == "":
+    print("No UID for the black box was entered...exiting")
     exit(2)
 log = Log(print_enabled=print_enabled)
 log.log("Starting connect.py")
