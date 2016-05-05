@@ -186,9 +186,7 @@ def activate(log):
     for i in range(20):
         try:
             r = requests.post(url, data=data, timeout=10)
-            if not r:
-                log.log("ERROR: No data was received")
-            elif r.status_code == requests.codes.ok:
+            if r.status_code == 201:
                 log.log("Successfully activated on the HUB")
                 return True
             else:
