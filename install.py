@@ -50,12 +50,18 @@ if __name__ == "__main__":
     if getuser() != 'root':
         print("Must be run as root...")
         exit(1)
-    interface = raw_input("Interface[wlan0]:")
-    config    = raw_input("Config File[arguments.config]:")
+    dconfig    = "arguments.config"
+    dinterface = "wlan0"
+    dhub       = "192.168.0.1"
+    dport      = "5000"
+    interface = raw_input("Interface["+dinterface+"]:")
+    config    = raw_input("Config File["+dconfig+"]:")
     ssid      = raw_input("Network SSID[REQUIRED]:")
     wpass     = raw_input("Network Password[REQUIRED]:")
     api_key   = raw_input("Octoprint API-Key[REQUIRED]:")
     box       = raw_input("Black Box UID[REQUIRED]:")
+    hub       = raw_input("IP Address of HUB["+dhub+"]:")
+    port      = raw_input("Port of HUB Webserver["+dport+"]:")
 
     if api_key == "":
         print("Did not provide an api_key...Exiting")
@@ -70,15 +76,21 @@ if __name__ == "__main__":
         print("Did not provide a UID for the black box...Exiting")
         exit(1)
     if interface == "":
-        interface = "wlan0"
+        interface = dinterface
     if config == "":
-        config = "arguments.config"
+        config = dconfig
+    if hub == "":
+        hub = dhub
+    if port == "":
+        port = dport
     with open(config,"w+") as f:
-        f.writelines(["-a " + str(api_key)   + "\n"
-                    , "-i " + str(interface) + "\n"
-                    , "-s " + str(ssid)      + "\n"
-                    , "-p " + str(wpass)     + "\n"
-                    , "-b " + str(box)       + "\n"])
+        f.writelines(["-a "    + str(api_key)   + "\n"
+                    , "-i "    + str(interface) + "\n"
+                    , "-s "    + str(ssid)      + "\n"
+                    , "-p "    + str(wpass)     + "\n"
+                    , "-b "    + str(box)       + "\n"
+                    , "--hub"  + str(hub)       + "\n"
+                    , "--port" + str(port)      + "\n"])
 
     if systemd_setup(config):
         print("Finished systemd setup")

@@ -27,7 +27,6 @@ PRINTER_ACTIVATE = "/printers"
 PRINTER_LIST     = "/printers"
 BASE_IP          = "192.168.0.1"
 BASE_PORT        = "5000"
-BASE_URL         = "http://" + BASE_IP + ":" + BASE_PORT
 #BASE_URL = "http://stratuspi:5000"
 UUID_FILE        = ".uuid"
 API_KEY          = "THISISNOTAGOODKEY"
@@ -218,11 +217,14 @@ def set_args(args):
     global WIFI_PASS
     global API_KEY
     global BLACK_BOX
+    global BASE_IP
+    global BASE_PORT
 
     opts, args = getopt.getopt(args, "hvs:p:i:a:c:",
                                    ["help","ssid=","pass="
                                        ,"interface=","apikey="
-                                       ,"verbose","config="])
+                                       ,"verbose","config="
+                                       ,"hub=","port="])
     for opt, arg in opts:
         if opt in ["-h", "--help"]:
             print("Usage: run.py -h -s <ssid> -p <password>")
@@ -240,6 +242,11 @@ def set_args(args):
             API_KEY = arg
         elif opt in ["-b", "--blackbox"]:
             BLACK_BOX = arg
+        elif opt in ["--hub"]:
+            BASE_IP = arg
+        elif opt in ["--port"]:
+            BASE_PORT = arg
+
 
 
 
@@ -265,6 +272,8 @@ set_args(sys.argv[1:])
 if config != None:
     load_config(config)
 
+BASE_URL = "http://" + BASE_IP + ":" + BASE_PORT
+print BASE_URL
 
 if WIFI_PASS == "":
     print("No password was entered, please specify with '-p <password>'")
