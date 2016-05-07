@@ -30,6 +30,7 @@ BASE_PORT        = "5000"
 #BASE_URL = "http://stratuspi:5000"
 UUID_FILE        = ".uuid"
 API_KEY          = "THISISNOTAGOODKEY"
+BLACK_BOX        = ""
 UUID             = None
 PORT             = 80
 
@@ -137,7 +138,7 @@ def verify(log):
     """Will make sure the data the server has is still valid"""
     url = BASE_URL + PRINTER_LIST
     params = {
-            'online_only': 'true',
+            'online': 'true',
             'internal': 'true'
     }
     try:
@@ -176,7 +177,7 @@ def activate(log):
             "id": get_uuid(),
             "ip": get_ipaddress(log),
             "key": str(API_KEY),
-            "port": str(PORT)
+            "port": str(PORT),
             "box": str(BLACK_BOX)
     }
 
@@ -220,11 +221,12 @@ def set_args(args):
     global BASE_IP
     global BASE_PORT
 
-    opts, args = getopt.getopt(args, "hvs:p:i:a:c:",
+    opts, args = getopt.getopt(args, "hvs:p:i:a:c:b:",
                                    ["help","ssid=","pass="
                                        ,"interface=","apikey="
                                        ,"verbose","config="
                                        ,"hub=","port="])
+                                       ,"blackbox="])
     for opt, arg in opts:
         if opt in ["-h", "--help"]:
             print("Usage: run.py -h -s <ssid> -p <password>")
