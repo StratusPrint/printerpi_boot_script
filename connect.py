@@ -6,10 +6,8 @@ import sys
 import getopt
 import requests
 import subprocess
-import socket
 import json
 import netifaces as ni
-import thread
 from logger import Log
 from getpass import getuser
 from wifi import Cell, Scheme
@@ -109,8 +107,8 @@ def connect_to_ap(log):
     return True
 
 def persist_connection(log):
-    """Should spawn as it's own thread and ensure it's IP doesn't change or
-    that connection is dropped. If it is, continuously try to reconnect"""
+    """Ensure it's IP doesn't change or that connection is dropped. 
+    If it is, continuously try to reconnect"""
 
     ip = get_ipaddress(log)
     while(True):
